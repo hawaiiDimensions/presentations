@@ -3,7 +3,7 @@
 ## =====================================
 
 setwd('~/Dropbox/hawaiiDimensions/presentations/nsfDimensions')
-corepar <- list(fg='black', bg='white', cex.lab=5, cex.axis=5.5)
+corepar <- list(fg='black', bg='white', cex.lab=2, cex.axis=1.5)
 
 ## =================================
 ## map of hawaii
@@ -28,7 +28,7 @@ setwd(oldwd)
 ## colors for flow ages
 geo.col <- c('gray45', colorRampPalette(brewer.pal(9,"YlGnBu")[-9])(max(hi.geo@data$AGE_GROUP)))
 
-jpeg(filename='fig_hawaii_flowAge.jpg', bg='black', width=4800, height=4800, quality=100)
+jpeg(filename='fig_hawaii_flowAge.jpg', width=4800, height=4800, quality=100)
 par(corepar)
 par(mar=rep(0, 4))
 plot(hi.geo, col=geo.col[hi.geo$AGE_GROUP+1], border=geo.col[hi.geo$AGE_GROUP+1])
@@ -50,3 +50,29 @@ logAxis(1, labels=FALSE)
 axis(side=1, at=c(10^(-3:0), 6))
 
 dev.off()
+
+
+
+##  LiDAR data
+
+library(sp)
+library(raster)
+library(rgdal)
+library(maptools)
+
+old.wd <- setwd('~/Dropbox/hawaiiDimensions/geodata')
+site.poly <- readOGR('./sites', 'dimensions_plots')
+setwd(old.wd)
+
+laup <- site.poly[grep('laupLSAG', site.poly@data$name), ]
+laup <- spTransform(laup, CRS('+proj=utm +zone=5 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0'))
+laupbbox <- bbox(laup)
+
+x <- seq(laupbbox[1, 1]-1, laupbbox[1, 2]+1, by=1)
+y <- seq(laupbbox[2, 1]-1, laupbbox[2, 2]+1, by=1)
+z <- matrix(rnorm(length(x)*length(y), 13.5, 3), nrow=length(x), ncol=length(y))
+z[z < 0] <- runif(sum(z < 0), 0, 25)
+r <- raster(z, xmn=laupbbox[1, 1], xmx=laupbbox[1, 2], ymn=laupbbox[2, 1], ymx=laupbbox[2, 2], 
+            crs=projection(laup))
+
+writeRaster(r, filename='laup_sim.tif', format='GTiff', overwrite=TRUE)
