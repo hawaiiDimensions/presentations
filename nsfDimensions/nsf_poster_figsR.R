@@ -2,7 +2,8 @@
 ## script to make figures for NSF poster
 ## =====================================
 
-setwd('')
+setwd('~/Dropbox/hawaiiDimensions/presentations/nsfDimensions')
+corepar <- list(fg='black', bg='white', cex.lab=5, cex.axis=5.5)
 
 ## =================================
 ## map of hawaii
@@ -30,14 +31,13 @@ geo.col <- c('gray45', colorRampPalette(brewer.pal(9,"YlGnBu")[-9])(max(hi.geo@d
 jpeg(filename='fig_hawaii_flowAge.jpg', bg='black', width=4800, height=4800, quality=100)
 par(corepar)
 par(mar=rep(0, 4))
-plot(hi.geo.poly, col=geo.col[hi.geo$AGE_GROUP+1], border=geo.col[hi.geo$AGE_GROUP+1])
+plot(hi.geo, col=geo.col[hi.geo$AGE_GROUP+1], border=geo.col[hi.geo$AGE_GROUP+1])
 dev.off()
 
 ## legend
 source('~/R_functions/logAxis.R')
 
-pdf(width=4.5, height=1.5, file='fig_hawaii_flowLegend.pdf')
-
+jpeg(filename='fig_hawaii_flowLegend.jpg', width=450*2, height=150*2, quality=100, pointsize=24)
 par(corepar)
 par(mar=c(2.5, 1, 0, 1) + 1, mgp=c(2,0.5,0), xpd=NA, cex.lab=1.5, cex.axis=1)
 
