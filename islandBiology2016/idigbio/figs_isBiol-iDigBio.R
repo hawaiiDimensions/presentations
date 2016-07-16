@@ -1,8 +1,14 @@
 library(ape)
 library(devtools)
+library(sp)
+library(maptools)
+library(rgdal)
+library(maps)
+library(mapdata)
 load_all('~/Dropbox/Research/meteR')
 load_all('~/Dropbox/Research/socorro')
 
+## place to save figures
 setwd('~/Dropbox/hawaiiDimensions/presentations/islandBiology2016/idigbio')
 
 
