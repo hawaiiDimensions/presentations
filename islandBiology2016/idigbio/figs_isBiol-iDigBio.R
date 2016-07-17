@@ -69,3 +69,25 @@ for(i in 1:length(yy)) {
 }
 
 dev.off()
+
+
+## sampling
+
+n <- 100
+xy <- matrix(runif(2*n), ncol=2)
+cols <- sample(c(0.15, 0.3, 0.5, 0.6), n, rep=TRUE)
+
+cols <- sample(hsv(c(0.15, 0.3, 0.5, 0.6)), n, rep=TRUE)
+detect <- sample(c(0, 0.9), n, rep=TRUE)
+
+pdf('fig_sampComplete.pdf', width=4, height=4)
+par(mar=rep(0.1, 4))
+plot(xy, bg=hsv(cols), pch=21, cex=2, axes=FALSE)
+box()
+dev.off()
+
+pdf('fig_sampIncomplete.pdf', width=4, height=4)
+par(mar=rep(0.1, 4))
+plot(xy, bg=hsv(cols, 1-detect, 1), col=hsv(0, 0, detect), pch=21, cex=2, axes=FALSE)
+box()
+dev.off()
