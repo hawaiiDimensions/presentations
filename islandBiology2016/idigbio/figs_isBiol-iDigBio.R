@@ -75,9 +75,8 @@ dev.off()
 
 n <- 100
 xy <- matrix(runif(2*n), ncol=2)
-cols <- sample(c(0.15, 0.3, 0.5, 0.6), n, rep=TRUE)
-
-cols <- sample(hsv(c(0.15, 0.3, 0.5, 0.6)), n, rep=TRUE)
+hs <- c(0.15, 0.3, 0.5, 0.6)
+cols <- sample(hs, n, rep=TRUE)
 detect <- sample(c(0, 0.9), n, rep=TRUE)
 
 pdf('fig_sampComplete.pdf', width=4, height=4)
@@ -90,4 +89,27 @@ pdf('fig_sampIncomplete.pdf', width=4, height=4)
 par(mar=rep(0.1, 4))
 plot(xy, bg=hsv(cols, 1-detect, 1), col=hsv(0, 0, detect), pch=21, cex=2, axes=FALSE)
 box()
+dev.off()
+
+
+## latent process
+
+randLogistic <- function(x, b, k, s) {
+    ceiling(k / (1 + exp(-b*x)) * exp(rnorm(length(x), 0, s)))
+}
+
+y1 <- randLogistic(seq(-10, 12, by=0.25), 0.5, 100, 0.05)
+y2 <- randLogistic(seq(-10, 12, by=0.25), 0.5, 80, 0.05)
+y3 <- randLogistic(seq(-10, 12, by=0.25), 0.75, 150, 0.075)
+y4 <- randLogistic(seq(-10, 12, by=0.25), 0.25, 50, 0.025)
+
+pdf('fig_latentMod.pdf', width=4, height=4)
+par(mar=c(3, 3, 0, 0) + 0.1, mgp=c(1.5, 1, 0))
+plot(y1, type='l', col=hsv(hs[4]), ylim=range(y1, y2, y3, y4), 
+     lwd=2, axes=FALSE, xlab='Time', ylab='Population size')
+box()
+axisArrows(length=0.1)
+lines(y2, col=hsv(hs[2]), lwd=2)
+lines(y3, col=hsv(hs[3]), lwd=2)
+lines(y4, col=hsv(hs[1]), lwd=2)
 dev.off()
