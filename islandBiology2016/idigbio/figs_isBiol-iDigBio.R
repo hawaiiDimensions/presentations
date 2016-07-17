@@ -113,3 +113,44 @@ lines(y2, col=hsv(hs[2]), lwd=2)
 lines(y3, col=hsv(hs[3]), lwd=2)
 lines(y4, col=hsv(hs[1]), lwd=2)
 dev.off()
+
+
+## network
+
+circweb <- function(x, rowc, colc, ...) {
+    x <- x[rowSums(x) > 0, ]
+    x <- x[, colSums(x) > 0]
+    xy <- cbind(cos(seq(0, 2*pi, length=1+sum(dim(x)))), sin(seq(0, 2*pi, length=1+sum(dim(x)))))[-1, ]
+    rownode <- rep(1:nrow(x), ncol(x))
+    colnode <- rep(1:ncol(x) + nrow(x), each=nrow(x))
+    links <- as.vector(x)
+    
+    xnode1 <- xy[rownode[links > 0], 1]
+    xnode2 <- xy[colnode[links > 0], 1]
+    ynode1 <- xy[rownode[links > 0], 2]
+    ynode2 <- xy[colnode[links > 0], 2]
+    
+    plot(xy, col=c(rep(rowc, nrow(x)), rep(colc, ncol(x))), 
+         panel.first=segments(xnode1, ynode1, xnode2, ynode2),
+         asp=1, axes=FALSE, xlab='', ylab='', ...)
+    
+}
+
+nr <- 30
+nc <- 20
+bimat <- matrix(0, nrow=nr, ncol=nc)
+bimat[upper.tri(bimat)] <- 1
+bimat[upper.tri(bimat) & sample(c(TRUE, FALSE), nr*nc, prob=c(6, 1), rep=TRUE)] <- 0
+
+pdf('fig_network.pdf', width=4, height=4)
+
+close.screen(all.screens = TRUE)
+par(mar=rep(0.1, 4), fg='black')
+circweb(bimat, rowc=hsv(0.45, 0.5, 0.9), colc=hsv(0.1, 0.9, 0.7), pch=16, cex=2)
+
+split.screen(c(1, 1), erase=FALSE)
+par(fg='transparent')
+circweb(bimat, rowc='black', colc='black', cex=2)
+
+dev.off()
+close.screen(all.screens = TRUE)
