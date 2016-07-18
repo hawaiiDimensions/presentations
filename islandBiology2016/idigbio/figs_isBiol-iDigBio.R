@@ -212,3 +212,21 @@ plot(xy, axes=FALSE, xlab='', ylab='')
 polygon(xy[chull(xy), 1], xy[chull(xy), 2])
 
 dev.off()
+
+
+## invasion beta
+
+pdf('fig_betaDiv.pdf', width = 4, height = 4)
+
+par(mar=c(2, 2, 0, 0) + 0.1, mgp=c(0.75, 1, 0), cex.lab=1.5)
+curve(exp(-5*x), ylim=c(0, 1.2), col=hsv(0.53, 1, 0.8), lwd=3, 
+      xlab='Distance', ylab='Simmilarity', axes=FALSE)
+box()
+curve(0.2+exp(-0.5*x), add=TRUE, col=hsv(0.1, 0.7, 1), lwd=3)
+
+text(0.2, exp(-5*0.2), labels='Native', pos=4, col=hsv(0.53, 1, 0.8), cex=1.5)
+text(0.6, 0.2+exp(-0.5*0.6), labels='Invasive', adj=c(0, -1), col=hsv(0.1, 0.7, 1), cex=1.5)
+text(0.5, 0.6, labels='?', cex=3)
+
+dev.off()
+
