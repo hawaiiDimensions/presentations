@@ -33,7 +33,8 @@ plots <- spTransform(plots, CRS(proj4string(islands)))
 
 pdf('fig_gbif1.pdf', width=5, height=3)
 par(mar=rep(0, 4))
-plot(islands)
+plot(rec, col='transparent')
+plot(islands, add=TRUE)
 points(plots, pch=16)
 dev.off()
 
