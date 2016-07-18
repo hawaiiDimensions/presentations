@@ -11,6 +11,38 @@ load_all('~/Dropbox/Research/socorro')
 ## place to save figures
 setwd('~/Dropbox/hawaiiDimensions/presentations/islandBiology2016/idigbio')
 
+## gbif and hdim
+
+thiswd <- getwd()
+eval(parse(text=c('{', readLines('~/Dropbox/hawaiiDimensions/geodata/maps/sites_map.R', n=29), '}')))
+setwd(thiswd)
+
+gbif <- occ_data(scientificName = c('Insecta', 'Arachnida'), 
+                 decimalLatitude = '18,24', decimalLongitude = '-161,-154', 
+                 limit = 200000)
+
+rec <- rbind(as.data.frame(gbif[[1]][[2]][, c('decimalLongitude', 'decimalLatitude')]),
+             as.data.frame(gbif[[2]][[2]][, c('decimalLongitude', 'decimalLatitude')]))
+
+rec <- SpatialPoints(rec, proj4string = CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'))
+rec <- spTransform(rec, CRS(proj4string(islands)))
+rec <- rec[!is.na(over(rec, islands))]
+
+plots <- readOGR('/Users/ajr/Dropbox/hawaiiDimensions/geodata/sites', 'dimensions_plots')
+plots <- spTransform(plots, CRS(proj4string(islands)))
+
+pdf('fig_gbif1.pdf', width=5, height=3)
+par(mar=rep(0, 4))
+plot(islands)
+points(plots, pch=16)
+dev.off()
+
+pdf('fig_gbif2.pdf', width=5, height=3)
+par(mar=rep(0, 4))
+plot(rec, pch=16, cex=0.5, col='gray')
+plot(islands, add=TRUE)
+points(plots, pch=16)
+dev.off()
 
 ## SAD
 
