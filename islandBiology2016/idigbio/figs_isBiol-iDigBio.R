@@ -190,6 +190,7 @@ close.screen(all.screens = TRUE)
 
 
 ## range size v. speciation 
+
 set.seed(0)
 tre <- rphylo(30, 1, 0.8)
 xy <- matrix(runif(100), ncol=2)
