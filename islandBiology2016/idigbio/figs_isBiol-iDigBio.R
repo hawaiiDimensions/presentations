@@ -187,3 +187,27 @@ circweb(bimat, rowc='black', colc='black', cex=2)
 
 dev.off()
 close.screen(all.screens = TRUE)
+
+
+## range size v. speciation 
+set.seed(0)
+tre <- rphylo(30, 1, 0.8)
+xy <- matrix(runif(100), ncol=2)
+
+pdf('fig_macroEcoEvo.pdf', width = 4, height = 4)
+layout(matrix(c(1, 0, 2, 3), nrow=2), widths = c(1, 2), heights = c(2, 1))
+
+par(mar=rep(2, 4))
+plot(tre, show.tip.label = FALSE, edge.width = 2)
+
+par(mar=c(2, 2, 0.4, 0.4), mgp=c(1, 1, 0))
+curve(x^2, lwd=2, axes=FALSE, xlab='Clade range size', ylab='Clade speciation rate')
+box()
+curve((x-1)^2, add=TRUE, lwd=2)
+text(0.5, 0.6, labels = '?', cex=3)
+
+par(mar=rep(2, 4))
+plot(xy, axes=FALSE, xlab='', ylab='')
+polygon(xy[chull(xy), 1], xy[chull(xy), 2])
+
+dev.off()
